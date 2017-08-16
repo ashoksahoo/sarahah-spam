@@ -27,38 +27,42 @@ function spam(users, msg) {
 function spamUser(user, msg) {
     var cookieJar = request.jar();
     var homeUrl = 'https://' + user + '.sarahah.com/';
-    try {
-        request.get(homeUrl, {jar: cookieJar}, function (error, response, body) {
-            var csrfToken = body.split('<input name="__RequestVerificationToken" type="hidden" value="')[1].split('"')[0];
-            var profileId = body.split('<input id="RecipientId" type="hidden" value="')[1].split('"')[0];
-            var msgUrl = homeUrl + 'Messages/SendMessage';
-            var headers = {
-                'Origin': 'https://' + user + '.sarahah.com',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'Accept': '*/*',
-                'Referer': 'https://' + user + '.sarahah.com/',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Accept-Language': 'en-US,en;q=0.8',
-                'X-Requested-With': 'XMLHttpRequest'
-            };
-            var data = {
-                '__RequestVerificationToken': csrfToken,
-                'userId': profileId,
-                'text': msg
-            };
-            request.post({
-                method: "POST",
-                headers: headers,
-                formData: data,
-                uri: msgUrl,
-                jar: cookieJar
-            })
-        });
-    }
-    catch (e) {
-        console.error(user, msg, e)
-    }
+    request.get(homeUrl, {jar: cookieJar}, function (error, response, body) {
+            try {
+                var csrfToken = body.split('<input name="__RequestVerificationToken" type="hidden" value="')[1].split('"')[0];
+                var profileId = body.split('<input id="RecipientId" type="hidden" value="')[1].split('"')[0];
+            }
+            catch (e) {
+                console.error(user, msg, e);
+            }
+            if (csrfToken && profileId) {
+                var msgUrl = homeUrl + 'Messages/SendMessage';
+                var headers = {
+                    'Origin': 'https://' + user + '.sarahah.com',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept': '*/*',
+                    'Referer': 'https://' + user + '.sarahah.com/',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    'Accept-Language': 'en-US,en;q=0.8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+                var data = {
+                    '__RequestVerificationToken': csrfToken,
+                    'userId': profileId,
+                    'text': msg
+                };
+                request.post({
+                    method: "POST",
+                    headers: headers,
+                    formData: data,
+                    uri: msgUrl,
+                    jar: cookieJar
+                })
+            }
+        }
+    );
+
 }
 
 function formatUsers(users) {
