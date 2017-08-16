@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    h1= title
+    p Welcome to #{title}
+    form(method="POST")
+        .form-group
+            label(for='users') User Names(CSV):
+            textarea#users.form-control(name='users')
+        .form-group
+            label(for='msg') Message:
+            textarea#msg.form-control(name='msg')
+        button.btn.btn-default(type='submit') Submit
+
+
