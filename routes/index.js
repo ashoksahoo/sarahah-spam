@@ -28,7 +28,6 @@ function spamUser(user, msg) {
     var cookieJar = request.jar();
     var homeUrl = 'https://' + user + '.sarahah.com/';
     try {
-
         request.get(homeUrl, {jar: cookieJar}, function (error, response, body) {
             var csrfToken = body.split('<input name="__RequestVerificationToken" type="hidden" value="')[1].split('"')[0];
             var profileId = body.split('<input id="RecipientId" type="hidden" value="')[1].split('"')[0];
@@ -57,8 +56,8 @@ function spamUser(user, msg) {
             })
         });
     }
-    catch (e){
-        console.error(user,msg,e)
+    catch (e) {
+        console.error(user, msg, e)
     }
 }
 
